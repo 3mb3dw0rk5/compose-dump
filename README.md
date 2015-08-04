@@ -1,7 +1,9 @@
 # compose-dump
 
-** This piece of code is tested with only a small number of use-cases yet. **
-** Use it at your own risk. You are invited to contribute. **
+***********************************************************************
+This piece of code is tested with only a small number of use-cases yet.
+Use  it  at  your   own   risk.    You   are   invited  to  contribute.
+***********************************************************************
 
 `compose-dump` let's you backup and restore
 [Docker-Compose](https://github.com/docker/compose)-projects.
