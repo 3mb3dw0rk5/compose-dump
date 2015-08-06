@@ -20,7 +20,7 @@ client = docker_client()
 
 
 class path(Path):
-    def copy_with_dirs(self, dst, *args, **kwargs):
+    def copy2_with_full_path(self, dst, *args, **kwargs):
         if not dst.dirname().exists():
             dst.makedirs()
         path(self).copy2(dst, *args, **kwargs)
@@ -73,11 +73,13 @@ class ProjectDump:
             raise NotImplementedError
 
     def store(self):
+        log.info("Dumping project in %s" % self.project_path)
         try:
             dump, dumped_services = self.__create_dump()
         except:
             self.project.unpause(service_names=self.services)
             self.tempdir.rmtree()
+            log.error("Dump creation failed. Please open a proper bug report.")
             raise
 
         self.project.unpause(service_names=self.services)
@@ -92,7 +94,10 @@ class ProjectDump:
                 log.info("Project-dump stored in %s" % str(dst))
             else:
                 dump.move(self.target)
-                log.info("Backup stored at %s" % str(self.target.joinpath(dump).abspath()))
+                log.info("Backup stored at %s" % str(self.target.joinpath(dump)))
+        except:
+            log.error("Failed to store project-dump. Please open a proper bug report.")
+            raise
         finally:
             self.tempdir.rmtree()
 
@@ -110,13 +115,13 @@ class ProjectDump:
         self.__init_create_dump()
 
         if 'config' in self.sources:
-            self.__copy_config(self.project_config)
+            self.__copy_config()
 
         if not self.no_pause:
             self.project.pause(service_names=self.services)
 
         if 'mounted' in self.sources or 'volumes' in self.sources:
-            dumped_services = self.__dump_service_volumes(self.project_config)
+            dumped_services = self.__dump_service_volumes()
         else:
             dumped_services = {}
 
@@ -126,36 +131,37 @@ class ProjectDump:
         # TODO compress backup
         # use  (code from) https://github.com/tsileo/dirtools/blob/master/dirtools.py
 
-    def __copy_config(self, project_config):
+    def __copy_config(self):
         log.debug("Dumping config.")
         self.dump_conf_dir.makedirs()
-        self.config_path.copy_with_dirs(self.dump_conf_dir)
+        self.config_path.copy2_with_full_path(self.dump_conf_dir)
 
-        for service in project_config:
+        for service in self.project_config:
 
             for extra_config in ('dockerfile', 'env_file'):
-                if extra_config in project_config[service]:
-                    extra_file = project_config[service][extra_config]
+                if extra_config in self.project_config[service]:
+                    extra_file = self.project_config[service][extra_config]
                     self.config_path.dirname().joinpath(extra_file)\
-                        .copy_with_dirs(self.dump_conf_dir / extra_file)
+                        .copy2_with_full_path(self.dump_conf_dir / extra_file)
                     self.config_path.dirname().joinpath(extra_file).copyfile(self.dump_conf_dir)
 
-            if 'extends' in project_config[service]:
-                extends_file = project_config[service]['extends']['file']
+            if 'extends' in self.project_config[service]:
+                extends_file = self.project_config[service]['extends']['file']
                 self.config_path.dirname().joinpath(extends_file)\
-                    .copy_with_dirs(self.dump_conf_dir / extends_file)
+                    .copy2_with_full_path(self.dump_conf_dir / extends_file)
 
-            if 'build' in project_config[service]:
-                src = self.project_path.joinpath(project_config[service]['build']).abspath()
-                dst = self.dump_conf_dir.joinpath(project_config[service]['build']).abspath()
+            if 'build' in self.project_config[service]:
+                src = self.project_path.joinpath(self.project_config[service]['build']).abspath()
+                dst = self.dump_conf_dir.joinpath(self.project_config[service]['build']).abspath()
                 patterns = read_ignore_patterns(src, '.dockerignore')
                 src.mergetree(dst, symlinks=True, ignore=ignore_patterns(*patterns))  # FIXME symlinks are NOT preserved; used method works in tests and on shell-usage
 
-    def __dump_service_volumes(self, project_config):
+    def __dump_service_volumes(self,):
         dumped_services = {}
         self.dump_data_dir.makedirs()
 
-        for service in self.project.get_services(self.services):
+        for service in [x for x in self.project.get_services(self.services)
+                        if 'volumes' in self.project_config[x.name]]:
 
             name = service.name
             dumped_services[name] = {}
@@ -177,7 +183,7 @@ class ProjectDump:
                 # client.inspect_container(container.id)['Config']['Labels']['com.docker.compose.config-hash']
                 dumped_services[name]['config_hash'] = service.config_hash
 
-            for volume in project_config[name]['volumes']:
+            for volume in self.project_config[name]['volumes']:
                 dumped_services[name]['volumes'] = {}
                 c_path, h_path = config.split_path_mapping(volume)
 
@@ -189,7 +195,7 @@ class ProjectDump:
                         src = self.project_path / h_path
                         dst = path(name) / 'mounts' / h_path
                         if src.isfile():
-                            src.copy_with_dirs(dst)
+                            src.copy2_with_full_path(dst)
                         elif src.isdir():
                             src.copytree(self.dump_data_dir / dst, symlinks=False)
                         else:

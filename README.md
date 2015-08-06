@@ -17,10 +17,11 @@ wrap into your backup-logic.
 Compose's latest released version's dependencies must be installed.
 
     git clone -o upstream git@github.com:funkyfuture/compose-dump.git
+    cd compose-dump
     git submodule init
     git submodule update
     pip install -r requirements.txt
-    # only if docker-compose is not in your environment:
+    # only if docker-compose is not installed in your environment:
     pip install -r requirements-compose.txt
     python setup.py develop
 
