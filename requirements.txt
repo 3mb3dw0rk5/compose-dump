@@ -1,1 +1,2 @@
-git+https://github.com/funkyfuture/path.py.git@mergepath#egg=path
+click>=6,<7
+docker-compose>=1.8,<1.9

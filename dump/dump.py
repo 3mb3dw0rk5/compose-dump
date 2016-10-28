@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
-from __future__ import unicode_literals
 import datetime
 from hashlib import md5
 import logging
 import os
-from path import Path, tempdir
+from pathlib import Path
 from platform import node as gethostname
 from shutil import ignore_patterns
 import sys
+import tarfile
+from tempfile import tempdir
 import yaml
 
 from compose import config
 from compose.cli.docker_client import docker_client
+
 
 log = logging.getLogger(__name__)
 client = docker_client()
@@ -49,19 +50,13 @@ class ProjectDump:
         else:
             self.target = cwd.joinpath(target).abspath()
 
-        # TODO enable when depending on compose >= 1.4
-        # config_file = options.get('--file') or os.environ.get('COMPOSE_FILE') or os.environ.get('FIG_FILE')
-        # if not config_file:
-        #     self.config_path = abspath(config.get_config_path(cwd))
-        #     self.project_path = cwd
-        # else:
-        #     self.config_path = abspath(join(cwd, config_file))
-        #     self.project_path = dirname(self.config_path)
-        # TODO remove when depending on compose >= 1.4
-        config_file = options.get('--file') or os.environ.get('COMPOSE_FILE') or \
-            os.environ.get('FIG_FILE') or 'docker-compose.yml'
-        self.config_path = cwd / config_file
-        self.project_path = cwd
+        config_file = options.get('--file') or os.environ.get('COMPOSE_FILE') or os.environ.get('FIG_FILE')
+        if not config_file:
+            self.config_path = os.path.abspath(config.get_config_path(cwd))
+            self.project_path = cwd
+        else:
+            self.config_path = os.path.abspath(os.path.join(cwd, config_file))
+            self.project_path = os.path.dirname(self.config_path)
 
         self.project_config = config.load_yaml(self.config_path)
 

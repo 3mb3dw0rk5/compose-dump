@@ -1,3 +1,0 @@
-[submodule "docker-compose"]
-	path = docker-compose
-	url = git@github.com:funkyfuture/docker-compose.git

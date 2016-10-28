@@ -84,6 +84,14 @@ https://github.com/funkyfuture/compose-dump
 ## TODO / Known issues
 
 - add license
+- use compose.config.load to get Context inst. and inst. compose.Project with it
+- more docs
+- use current docker-py features
+- consider volumes defined in the image
+- adapt version2 config files
+- use pathlib properly
+- decouple dump and store
+- do not store data contents in a temporary folder 
 - tests tests tests
 
 #### backup
@@ -92,10 +100,11 @@ https://github.com/funkyfuture/compose-dump
 - add log-messages to Manifest
 - save extends-files from extends-files
 - handle volumes defined in extended services
-- add [snapshotter](https://github.com/seanh/snapshotter/blob/master/snapshotter/snapshotter.py)
-  as storemethod
 - backup-configuration in a file
+- add warning when mounted directories are in a build-context
+- make top-level name configurable
 - maybe:
+  - change to click framework
   - .backupignore
   - pre_ and post_command to be executed in
 

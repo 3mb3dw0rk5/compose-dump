@@ -1,20 +1,19 @@
-from __future__ import print_function
-from __future__ import unicode_literals
 from inspect import getdoc
 import logging
 import re
 import sys
 
-from docker.errors import APIError
-
-from .. import __version__
-from ..dump import ProjectDump
-from compose import legacy
 from compose.project import NoSuchService, ConfigurationError
 from compose.service import BuildError, NeedsBuildError
-from compose.cli.command import Command
+from compose.cli.main import TopLevelCommand as Command
 from compose.cli.docopt_command import NoSuchCommand
 from compose.cli.errors import UserError
+
+from docker.errors import APIError
+
+from dump import __version__
+from dump.dump import ProjectDump
+
 
 log = logging.getLogger(__name__)
 
@@ -27,7 +26,7 @@ def main():
     except KeyboardInterrupt:
         log.error("\nAborting.")
         sys.exit(1)
-    except (UserError, NoSuchService, ConfigurationError, legacy.LegacyContainersError) as e:
+    except (UserError, NoSuchService, ConfigurationError) as e:
         log.error(e.msg)
         sys.exit(1)
     except NoSuchCommand as e:
