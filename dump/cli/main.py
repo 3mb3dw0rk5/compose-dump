@@ -1,130 +1,112 @@
-from inspect import getdoc
 import logging
-import re
 import sys
 
-from compose.project import NoSuchService, ConfigurationError
-from compose.service import BuildError, NeedsBuildError
-from compose.cli.main import TopLevelCommand as Command
-from compose.cli.docopt_command import NoSuchCommand
-from compose.cli.errors import UserError
-
-from docker.errors import APIError
+import click
+from compose import config as compose_config
 
 from dump import __version__
-from dump.dump import ProjectDump
+from dump.cli.utils import CWD
 
 
-log = logging.getLogger(__name__)
+COMPRESSIONS = ('gz', 'bz2', 'xz')
+COMPRESSION_EXTENSIONS = tuple('.' + x for x in COMPRESSIONS)
 
 
-def main():
-    setup_logging()
-    try:
-        command = TopLevelCommand()
-        command.sys_dispatch()
-    except KeyboardInterrupt:
-        log.error("\nAborting.")
-        sys.exit(1)
-    except (UserError, NoSuchService, ConfigurationError) as e:
-        log.error(e.msg)
-        sys.exit(1)
-    except NoSuchCommand as e:
-        log.error("No such command: %s", e.command)
-        log.error("")
-        log.error("\n".join(parse_doc_section("commands:", getdoc(e.supercommand))))
-        sys.exit(1)
-    except APIError as e:
-        log.error(e.explanation)
-        sys.exit(1)
-    except BuildError as e:
-        log.error("Service '%s' failed to build: %s" % (e.service.name, e.reason))
-        sys.exit(1)
-    except NeedsBuildError as e:
-        log.error("Service '%s' needs to be built, but --no-build was passed." % e.service.name)
-        sys.exit(1)
+console_handler = logging.StreamHandler(sys.stderr)
+console_handler.setFormatter(logging.Formatter())
+
+log_handlers = [console_handler]
+
+log = logging.getLogger('compose-dump')
+log.addHandler(console_handler)
+
+# Disable requests logging
+logging.getLogger("requests").propagate = False
 
 
-def setup_logging():
-    console_handler = logging.StreamHandler(sys.stderr)
-    console_handler.setFormatter(logging.Formatter())
-    console_handler.setLevel(logging.INFO)
-    root_logger = logging.getLogger()
-    root_logger.addHandler(console_handler)
-    root_logger.setLevel(logging.DEBUG)
-
-    # Disable requests logging
-    logging.getLogger("requests").propagate = False
+def set_debug_logging(ctx, para, value):
+    log_level = logging.DEBUG if value else logging.INFO
+    log.setLevel(log_level)
+    for handler in log_handlers:
+        handler.setLevel(log_level)
 
 
-# stolen from docopt master
-def parse_doc_section(name, source):
-    pattern = re.compile('^([^\n]*' + name + '[^\n]*\n?(?:[ \t].*?(?:\n|$))*)',
-                         re.IGNORECASE | re.MULTILINE)
-    return [s.strip() for s in pattern.findall(source)]
+@click.group()
+@click.version_option(__version__)
+def main(**options):
+    pass
 
 
-class TopLevelCommand(Command):
-    """Backup and restore Docker-Compose projects
-
-    Usage:
-      compose-dump [options] [COMMAND] [ARGS...]
-      compose-dump -h|--help
-
-    Options:
-      -f, --file FILE           Specify an alternate compose file (default: docker-compose.yml)
-      -p, --project-name NAME   Specify an alternate project name (default: directory name)
-      --verbose                 Show more output
-      -v, --version             Print version and exit
-
-    Commands:
-      backup             Backup a project and it's data
-      pause              Pause services
-      restore            Restore a project
-      unpause            Unpause services
-
+@click.command()
+@click.option('--config', is_flag=True,
+              help='Include configuration files, including referenced files '
+                   'and build-contexts.')
+@click.option('--compression', '-x', type=click.Choice(COMPRESSIONS),
+              help='Sets the compression when an archive file is written. '
+                   'Can also be provided as suffix on the target option.')
+@click.option('--file', '-f', metavar='FILENAME', multiple=True,
+              help='Specifies alternate compose files.')
+@click.option('--mounted', is_flag=True,
+              help='Include mounted volumes, skips paths outside project folder.')
+@click.option('--no-pause', is_flag=True, help="Don't pause containers during backup")
+@click.option('--project-name', '-p', default=CWD.name,  envvar='COMPOSE_PROJECT_NAME',
+              help='Specifies an alternate project name.')
+@click.option('--target', '-t', metavar='PATH', help='Dump target, defaults to stdout. ')
+@click.option('--verbose', is_flag=True, is_eager=True, callback=set_debug_logging,
+              help='Show debug messages.')
+@click.option('--volumes', is_flag=True, help='Include container volumes.')
+@click.argument('services', nargs=-1, metavar='SERVICE...')
+def backup(**options):
     """
-    def docopt_options(self):
-        options = super(TopLevelCommand, self).docopt_options()
-        options['version'] = __version__
-        return options
+    Backup a project and its data. Containers are not saved.
 
-    def help(self, project, options):
-        """
-        Get help on a command.
+    If none of the include flags is provided, all are set to true.
 
-        Usage: help COMMAND
-        """
-        handler = self.get_handler(options['COMMAND'])
-        raise SystemExit(getdoc(handler))
+    For example:
 
-    def backup(self, project, options):
-        """
-        Backup a project and it's data. Containers are not saved.
+        $ compose-dump backup -t /var/backups/docker-compose
+    """
 
-        For example:
+    # figure out options
 
-            $ compose-dump backup -t /var/backups/docker-compose
+    del options['verbose']
 
-        Usage: backup [options] [SERVICE...]
+    options['compose_files'] = options['file']
+    del options['file']
 
-        Options:
-            -C, --config            Backup configuration including additional files and build-contexts.
-            -x (none|tar|gz|bz2),   Overrides --compression,
-            --dumpformat=FORMAT     Target format [default: none]
-            --full                  Backup config, mounted and container-volumes, default
-            -m, --mounted           Backup mounted volumes, skips paths outside project folder
-            --no-pause               Don't pause containers during backup
-            -t PATH, --target=PATH  Dump target [default: stdout]
-            -V, --volumes           Include containers' volumes
-        """
+    options['scopes'] = ()
+    scopes = ('config', 'mounted', 'volumes')
+    for scope in scopes:
+        if options[scope]:
+            options['scopes'] += (scope,)
+        del options[scope]
+    if not options['scopes']:
+        options['scopes'] = scopes
 
-        # figure out options
+    if options['target'] is None or \
+            options['target'].endswith(COMPRESSION_EXTENSIONS + ('.tar',)):
+        options['target_type'] = 'archive'
+    else:
+        options['target_type'] = 'folder'
 
-        if not (options['--config'] or options['--mounted'] or options['--volumes']) or options['--full']:
-            for option in ('--config', '--mounted', '--volumes'):
-                options[option] = True
-        if options['-x'] is not None:
-            options['--dumpformat'] = options['-x']
+    if options['compression'] is None and options['target'] and \
+            options['target'].endswith(COMPRESSION_EXTENSIONS):
+        options['compression'] = options['target'].rsplit('.', 1)[1]
 
-        ProjectDump(project, options).store()
+    base_dir = str(CWD)
+    environment = compose_config.environment.Environment.from_env_file(base_dir)
+    config_details = compose_config.find(base_dir, options['compose_files'], environment)
+    config = compose_config.load(config_details)
+
+    unknown_services = set(options['services']) - set(x['name'] for x in config.services)
+    if unknown_services:
+        log.error('Unknown services: %s' % ', '.join(unknown_services))
+        raise SystemExit(1)
+    if not options['services']:
+        options['services'] = tuple(x['name'] for x in config.services)
+
+    log.debug('Invoking project dump with these settings: %s' % options)
+
+    # ProjectDump(project, options).store()
+
+main.add_command(backup)
