@@ -1,9 +1,9 @@
-from collections import namedtuple
-from hashlib import md5
 import os
 import re
+from collections import namedtuple
+from hashlib import md5
 
-from dump.cli import main
+from dump import main
 
 
 def count_dir_contents(path):

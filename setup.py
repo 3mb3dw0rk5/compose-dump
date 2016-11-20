@@ -47,6 +47,6 @@ setup(
     test_suite='nose.collector',
     entry_points="""
     [console_scripts]
-    compose-dump=dump.cli.main:main
+    compose-dump=dump.main:main
     """,
 )

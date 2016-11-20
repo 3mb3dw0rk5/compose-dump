@@ -11,7 +11,6 @@ from compose.config.errors import ConfigurationError
 
 from dump import __version__
 from dump.backup import create_dump
-from dump.cli.utils import directory_exists
 from dump.utils import setup_loghandler
 
 COMPRESSIONS = ('bz2', 'gz',  'tar', 'xz')
@@ -26,6 +25,15 @@ log.addHandler(console_handler)
 
 # Disable requests logging
 logging.getLogger('requests').propagate = False
+
+
+def directory_exists(path):
+    if not path.exists():
+        log.error('%s does not exist.' % path)
+        raise SystemExit(1)
+    if not path.is_dir():
+        log.error('%s is not a directory' % path)
+        raise SystemExit(1)
 
 
 def parse_cli_args(args):
