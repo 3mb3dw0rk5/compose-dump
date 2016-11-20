@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  foo:
+    build:
+      context: lost
+    extends:
+      file: void.yml
+      service: none
+    env_file: dangling_link

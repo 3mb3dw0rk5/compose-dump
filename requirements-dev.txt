@@ -1,2 +1,4 @@
 flake8
 pytest
+# TODO change when a release incl. caplog.clear() is released
+git+git://github.com/eisensheng/pytest-catchlog.git#egg=pytest-catchelog

@@ -1,0 +1,4 @@
+result:
+  extends:
+    file: second_level.yml
+    service: intermediate

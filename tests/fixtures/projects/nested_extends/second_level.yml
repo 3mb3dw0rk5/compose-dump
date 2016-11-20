@@ -1,0 +1,4 @@
+intermediate:
+  extends:
+    file: first_level.yml
+    service: base

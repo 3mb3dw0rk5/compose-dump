@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+  foo:
+    build:
+      context: ./build_foo
+    volumes:
+      - care:/care
+      - ./asset.txt:/asset.txt
+      - ./assets:/assets
+      - /volume
+      - ./local:/image_volume2
+    command: ['sleep', '300']
+
+volumes:
+  dontcare:
+    external: true
+  care:
+    external: false

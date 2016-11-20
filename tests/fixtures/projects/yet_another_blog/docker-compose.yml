@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+  web:
+    image: wordpress
+    env_file:
+      - ./common_assets/common.env
+      - web.env
+      - ../../outside_scope/platform.env
+  db:
+    image: postgres
+    env_file: ./common_assets/common.env
+    extends:
+      file: database.yml
+      service: db_base

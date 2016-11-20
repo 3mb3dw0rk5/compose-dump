@@ -13,8 +13,7 @@ def find_version():
     raise RuntimeError("Unable to find version string.")
 
 
-install_requires = [x for x in open('requirements.txt').readlines() if x]
-tests_require = [x for x in open('requirements-dev.txt').readlines() if x]
+install_requires = [x for x in open('requirements.txt').readlines() if x and not x.startswith('#')]
 
 if sys.version_info < (3, 4):
     raise AssertionError('Requires Python 3.4 or later.')
@@ -42,7 +41,7 @@ setup(
     license='ISC',
     platforms=["any"],
     install_requires=install_requires,
-    tests_require=tests_require,
+    tests_require=[],  # TODO
     packages=find_packages(exclude=['tests.*', 'tests']),
     include_package_data=True,
     test_suite='nose.collector',
@@ -51,5 +50,3 @@ setup(
     compose-dump=dump.cli.main:main
     """,
 )
-
-

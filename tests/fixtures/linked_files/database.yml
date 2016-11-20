@@ -1,0 +1,6 @@
+version: '2'
+
+services:
+  db_base:
+    labels:
+      - traefik.enable=false
