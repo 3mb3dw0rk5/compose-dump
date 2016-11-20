@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from dump.utils import PathSet
+from compose_dump.utils import PathSet
 
 
 def test_pathset():

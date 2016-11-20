@@ -12,13 +12,13 @@ from compose.config.config import ConfigFile
 from compose.service import NoSuchImageError
 import yaml
 
-from dump import __version__
-from dump.utils import get_container_for_service, get_container_with_project_volume, hash_string, locates_in, \
+from compose_dump import __version__
+from compose_dump.utils import get_container_for_service, get_container_with_project_volume, hash_string, locates_in, \
     setup_loghandler, PathSet
-from dump.storage import init_storage
+from compose_dump.storage import init_storage
 
 
-log = logging.getLogger('compose-dump')
+log = logging.getLogger('compose-compose_dump')
 
 
 def dict_representer(dumper, data):

@@ -9,9 +9,9 @@ import sys
 import tarfile
 from time import time
 
-from dump.utils import hash_string
+from compose_dump.utils import hash_string
 
-log = logging.getLogger('compose-dump')
+log = logging.getLogger('compose-compose_dump')
 
 
 def copy(src, dst, *args, **kwargs):

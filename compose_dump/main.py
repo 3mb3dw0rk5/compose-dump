@@ -9,16 +9,16 @@ from types import SimpleNamespace
 from compose import config as compose_config
 from compose.config.errors import ConfigurationError
 
-from dump import __version__
-from dump.backup import create_dump
-from dump.utils import setup_loghandler
+from compose_dump import __version__
+from compose_dump.backup import create_dump
+from compose_dump.utils import setup_loghandler
 
 COMPRESSIONS = ('bz2', 'gz',  'tar', 'xz')
 COMPRESSION_EXTENSIONS = tuple('.' + x for x in COMPRESSIONS)
 SCOPES = ('config', 'mounted', 'volumes')
 
 
-log = logging.getLogger('compose-dump')
+log = logging.getLogger('compose-compose_dump')
 
 console_handler = logging.StreamHandler(sys.stderr)
 log.addHandler(console_handler)
@@ -90,12 +90,12 @@ def backup(args):
 
     For example:
 
-        $ compose-dump backup -t /var/backups/docker-compose
+        $ compose-compose_dump backup -t /var/backups/docker-compose
     ####
     """
     options = process_backup_options(vars(args).copy())
     config, config_details, environment = get_compose_context(options)
-    log.debug('Invoking project dump with these settings: %s' % options)
+    log.debug('Invoking project compose_dump with these settings: %s' % options)
     ctx = SimpleNamespace(
         options=options, manifest=OrderedDict(), config=config, config_details=config_details,
         environment=environment)

@@ -2,7 +2,7 @@ import logging
 
 from pytest import mark
 
-from dump.main import get_compose_context
+from compose_dump.main import get_compose_context
 from tests.utils import log_message, run
 
 

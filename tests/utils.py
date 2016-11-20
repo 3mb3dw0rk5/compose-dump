@@ -3,7 +3,7 @@ import re
 from collections import namedtuple
 from hashlib import md5
 
-from dump import main
+from compose_dump import main
 
 
 def count_dir_contents(path):

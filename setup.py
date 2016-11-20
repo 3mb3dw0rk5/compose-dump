@@ -7,7 +7,7 @@ import sys
 
 
 def find_version():
-    for line in open(os.path.join('dump', '__init__.py'), 'rt').readlines():
+    for line in open(os.path.join('compose_dump', '__init__.py'), 'rt').readlines():
         if line.startswith('__version__ = '):
             return line[len('__version__ = ')].strip()
     raise RuntimeError("Unable to find version string.")
@@ -19,7 +19,7 @@ if sys.version_info < (3, 4):
     raise AssertionError('Requires Python 3.4 or later.')
 
 setup(
-    name='compose-dump',
+    name='compose-compose_dump',
     version=find_version(),
     description='Backup-tool for Docker-Compose projects',
     long_description=open('README.md').read(),
@@ -34,8 +34,8 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: Implementation :: CPython'],
     # keywords= TODO
-    url='https://github.com/funkyfuture/compose-dump',
-    bugtrack_url='https://github.com/funkyfuture/compose-dump/issues',
+    url='https://github.com/funkyfuture/compose-compose_dump',
+    bugtrack_url='https://github.com/funkyfuture/compose-compose_dump/issues',
     author='Frank Sachsenheim',
     author_email='funkyfuture@riseup.net',
     license='ISC',
@@ -47,6 +47,6 @@ setup(
     test_suite='nose.collector',
     entry_points="""
     [console_scripts]
-    compose-dump=dump.main:main
+    compose-compose_dump=compose_dump.main:main
     """,
 )
