@@ -52,10 +52,10 @@ def add_backup_parser(subparsers):
     parser.set_defaults(action=backup)
     parser.add_argument('--config', action='store_true', default=False,
                         help='Include configuration files, including referenced files '
-                                'and build-contexts.')
+                             'and build-contexts.')
     parser.add_argument('-x', '--compression', choices=COMPRESSIONS,
                         help='Sets the compression when an archive file is written. '
-                                'Can also be provided as suffix on the target option.')
+                             'Can also be provided as suffix on the target option.')
     parser.add_argument('-f', '--file', nargs='*', metavar='FILENAME',
                         help='Specifies alternate compose files.')
     parser.add_argument('--mounted', action='store_true', default=False,
@@ -64,12 +64,15 @@ def add_backup_parser(subparsers):
                         help="Don't pause containers during backup")
     parser.add_argument('--project-dir', default=os.getcwd(), metavar='PATH',
                         help="Specifies the project's root folder, defaults to the current "
-                                "directory.")
+                             "directory.")
     parser.add_argument('-p', '--project-name', help='Specifies an alternate project name.')
     parser.add_argument('--resolve-symlinks', action='store_true', default=False,
                         help='References to configuration files that are symlinks are stored as '
-                                'files.')
+                             'files.')
     parser.add_argument('--target', '-t', metavar='PATH', help='Dump target, defaults to stdout.')
+    parser.add_argument('--target-pattern', metavar='PATTERN', default='{host}__{name}__{path_hash}_{date}_{time}',
+                        help='String template for the backup name. May include the placeholders {date}, {host},'
+                             '{isodate}, {name}, {path_hash} and {time}.')
     parser.add_argument('--verbose', action='store_true', default=False,
                         help='Log debug messages.')
     parser.add_argument('--volumes', action='store_true', default=False,

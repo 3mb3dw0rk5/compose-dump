@@ -45,13 +45,17 @@ def expand_dst(method):
 
 
 class StorageAdapterBase(abc.ABC):
-    def _make_name(self, ctx):
-        # TODO make this configurable
-        name = '__'.join([
-            ctx.manifest['meta']['host'], hash_string(ctx.options['project_dir']),
-            ctx.options['project_name'], ctx.manifest['meta']['invocation_time']
-        ])
-        return name
+    @staticmethod
+    def _make_name(ctx):
+        isodate = ctx.manifest['meta']['invocation_time']
+        return ctx.options['target_pattern'].format(
+            date=isodate[:10],
+            isodate=isodate,
+            host=ctx.manifest['meta']['host'],
+            name=ctx.options['project_name'],
+            path_hash=hash_string(ctx.options['project_dir']),
+            time=isodate[11:16]
+        )
 
     def finalize(self):
         pass
