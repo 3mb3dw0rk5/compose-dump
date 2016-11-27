@@ -7,7 +7,6 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from compose import config as compose_config
-from compose.config.errors import ConfigurationError
 
 from compose_dump import __version__
 from compose_dump.backup import create_dump
@@ -171,11 +170,7 @@ def get_compose_context(options):
     base_dir = str(options['project_dir'])
     environment = compose_config.environment.Environment.from_env_file(base_dir)
     config_details = compose_config.find(base_dir, options['compose_files'], environment)
-    try:
-        config = compose_config.load(config_details)
-    except ConfigurationError as e:
-        log.error(e.msg)
-        raise SystemExit(1)
+    config = compose_config.load(config_details)
     unknown_services = set(options['services']) - set(x['name'] for x in config.services)
     if unknown_services:
         log.error('Unknown services: %s' % ', '.join(unknown_services))
@@ -185,11 +180,27 @@ def get_compose_context(options):
     return config, config_details, environment
 
 
+####
+
+
 def main():
-    # TODO unhandled exceptions
-    args = parse_cli_args(sys.argv[1:])
-    setup_loghandler(console_handler, args.verbose)
-    args.action(args)
+    try:
+        args = parse_cli_args(sys.argv[1:])
+        setup_loghandler(console_handler, getattr(args, 'verbose', False))
+        args.action(args)
+    except SystemExit as e:
+        exit_code = e.code
+    except compose_config.ConfigurationError as e:
+        log.error(e.msg)
+        exit_code = 1
+    except Exception as e:
+        log.error('An unhandled exception occurred, please submit a bug report:')
+        log.exception(e)
+        exit_code = 3
+    else:
+        exit_code = 0
+
+    raise SystemExit(exit_code)
 
 if __name__ == '__main__':
     main()
