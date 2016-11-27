@@ -18,6 +18,9 @@ COMPRESSION_EXTENSIONS = tuple('.' + x for x in COMPRESSIONS)
 SCOPES = ('config', 'mounted', 'volumes')
 
 
+####
+
+
 log = logging.getLogger('compose-compose_dump')
 
 console_handler = logging.StreamHandler(sys.stderr)
@@ -25,6 +28,9 @@ log.addHandler(console_handler)
 
 # Disable requests logging
 logging.getLogger('requests').propagate = False
+
+
+####
 
 
 def directory_exists(path):
@@ -36,10 +42,13 @@ def directory_exists(path):
         raise SystemExit(1)
 
 
+####
+
+
 def parse_cli_args(args):
-    parser = ArgumentParser(description='Backup and restore Docker-Compose projects.',
-                            epilog='Restoring is not implemented yet.')
+    parser = ArgumentParser()
     parser.add_argument('--version', action='version', version=__version__)
+    parser.set_defaults(action=help)
     subparsers = parser.add_subparsers()
     add_backup_parser(subparsers)
     add_restore_parser(subparsers)
@@ -83,6 +92,23 @@ def add_backup_parser(subparsers):
 
 def add_restore_parser(parser):
     pass
+
+
+####
+
+
+def help(args):
+    print("""Backup and restore Docker-Compose projects.
+
+Use one of the subcommands `backup` or `restore`.
+For help on each append the `--help` argument.
+
+Restoring is not implemented yet.
+
+Online documentation: http://compose-dump.rtfd.io/
+""")
+
+####
 
 
 def backup(args):
