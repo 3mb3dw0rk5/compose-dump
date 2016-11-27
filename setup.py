@@ -9,7 +9,7 @@ import sys
 def find_version():
     for line in open(os.path.join('compose_dump', '__init__.py'), 'rt').readlines():
         if line.startswith('__version__ = '):
-            return line[len('__version__ = ')].strip()
+            return line[len('__version__ = '):].strip()
     raise RuntimeError("Unable to find version string.")
 
 
@@ -19,10 +19,10 @@ if sys.version_info < (3, 4):
     raise AssertionError('Requires Python 3.4 or later.')
 
 setup(
-    name='compose-compose_dump',
+    name='compose-dump',
     version=find_version(),
     description='Backup-tool for Docker-Compose projects',
-    long_description=open('README.md').read(),
+    long_description=open('README.rst').read(),
     classifiers=[  # TODO
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
@@ -44,9 +44,8 @@ setup(
     tests_require=[],  # TODO
     packages=find_packages(exclude=['tests.*', 'tests']),
     include_package_data=True,
-    test_suite='nose.collector',
     entry_points="""
     [console_scripts]
-    compose-compose_dump=compose_dump.main:main
+    compose-dump=compose_dump.main:main
     """,
 )
