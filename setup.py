@@ -6,13 +6,6 @@ from setuptools import setup, find_packages
 import sys
 
 
-def find_version():
-    for line in open(os.path.join('compose_dump', '__init__.py'), 'rt').readlines():
-        if line.startswith('__version__ = '):
-            return line[len('__version__ = '):].strip()
-    raise RuntimeError("Unable to find version string.")
-
-
 install_requires = [x for x in open('requirements.txt').readlines() if x and not x.startswith('#')]
 
 if sys.version_info < (3, 4):
@@ -20,7 +13,7 @@ if sys.version_info < (3, 4):
 
 setup(
     name='compose-dump',
-    version=find_version(),
+    version='0.1-beta1',
     description='Backup-tool for Docker-Compose projects',
     long_description=open('README.rst').read(),
     classifiers=[  # TODO
