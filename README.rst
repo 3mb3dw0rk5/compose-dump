@@ -141,6 +141,7 @@ general
 ~~~~~~~
 
 -  test against different versions of docker-compose
+-  features list at the top of readme
 -  make use of compose config hashes
 -  support for tls options
 -  maybe:

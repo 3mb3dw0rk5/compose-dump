@@ -63,9 +63,9 @@ def add_backup_parser(subparsers):
                              'and build-contexts.')
     parser.add_argument('-x', '--compression', choices=COMPRESSIONS,
                         help='Sets the compression when an archive file is written. '
-                             'Can also be provided as suffix on the target option.')
+                             'Can also be provided as file extension on the --target option.')
     parser.add_argument('-f', '--file', nargs='*', metavar='FILENAME',
-                        help='Specifies alternate compose files.')
+                        help='Specifies compose files.')
     parser.add_argument('--mounted', action='store_true', default=False,
                         help='Include mounted volumes, skips paths outside project folder.')
     parser.add_argument('--no-pause', action='store_true', default=False,
@@ -86,7 +86,7 @@ def add_backup_parser(subparsers):
     parser.add_argument('--volumes', action='store_true', default=False,
                         help='Include container volumes.')
     parser.add_argument('services', default=(), nargs='*', metavar='SERVICE...',
-                        help='Restrict backup ob build contexts and volumes to these services.')
+                        help='Restrict backup of build contexts and volumes to these services.')
 
 
 def add_restore_parser(parser):
