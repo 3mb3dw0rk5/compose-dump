@@ -138,9 +138,9 @@ def process_backup_options(options):
 
     options['project_dir'] = Path(options['project_dir'])
     directory_exists(options['project_dir'])
-    options['project_name'] = options['project_name'] or \
-                              os.getenv('COMPOSE_PROJECT_NAME') or \
-                              options['project_dir'].name
+    options['project_name'] = (options['project_name'] or
+                               os.getenv('COMPOSE_PROJECT_NAME') or
+                               options['project_dir'].name)
 
     options['scopes'] = ()
     for scope in SCOPES:
@@ -201,6 +201,3 @@ def main():
         exit_code = 0
 
     raise SystemExit(exit_code)
-
-if __name__ == '__main__':
-    main()

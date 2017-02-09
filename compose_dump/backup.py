@@ -23,7 +23,7 @@ log = logging.getLogger('compose-compose_dump')
 
 def dict_representer(dumper, data):
     return dumper.represent_dict(data.items())
-yaml.add_representer(OrderedDict, dict_representer)
+yaml.add_representer(OrderedDict, dict_representer)  # noqa: E305
 
 
 def create_dump(ctx):
