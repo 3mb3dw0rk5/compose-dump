@@ -1,7 +1,8 @@
 import os
 import re
-from collections import namedtuple
+import sys
 from hashlib import md5
+from types import SimpleNamespace
 
 from compose_dump import main
 
@@ -72,19 +73,26 @@ def log_message(level, text_pattern, caplog):
     return True
 
 
-def result_okay(run_result):
+def result_okay(args):
+    run_result = run(args)
     if run_result.exit_code != 0:
-        raise AssertionError(run_result.output)
+        raise AssertionError('Exit code: %s' % run_result.exit_code)
     return True
 
-RunResult = namedtuple('RunResult', 'exit_code')
 
 def run(args):
-    args.insert(1, '--verbose')
-    args = main.parse_cli_args([str(x) for x in args])
+    args.insert(0, 'compose-dump')
+    args.insert(2, '--verbose')
+    argv = sys.argv.copy()
+    sys.argv = args
     try:
-        args.action(args)
+        main.main()
     except SystemExit as e:
-        return RunResult(e.code)
+        sys.argv = argv
+        args.remove('compose-dump')
+        args.remove('--verbose')
+        result = SimpleNamespace()
+        result.exit_code = e.code
+        return result
     else:
-        return RunResult(0)
+        raise RuntimeError

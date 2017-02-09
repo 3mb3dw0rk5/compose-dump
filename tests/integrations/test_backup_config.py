@@ -16,13 +16,13 @@ def test_yet_another_blog(project_dir, temp_dir, target, compression, resolve_sy
     args = ['backup']
 
     if target:
-        args.extend(['-t', temp_dir])
+        args.extend(['-t', str(temp_dir)])
     if compression:
         args.extend(['--compression', compression])
     if resolve_symlinks:
         args.append('--resolve-symlinks')
 
-    assert result_okay(run(args))
+    assert result_okay(args)
 
     if target:
         target_item = get_target_folder(temp_dir)
@@ -46,31 +46,31 @@ def test_yet_another_blog(project_dir, temp_dir, target, compression, resolve_sy
 
 
 def test_config_with_build_context_v1(project_dir, temp_dir):
-    assert result_okay(run(['backup', '-t', temp_dir]))
+    assert result_okay(['backup', '-t', str(temp_dir)])
     target_folder = get_target_folder(temp_dir)
     assert identical_folder_contents(project_dir, target_folder / 'config')
 
 
 def test_config_with_build_context_v2(project_dir, temp_dir):
-    assert result_okay(run(['backup', '-t', temp_dir]))
+    assert result_okay(['backup', '-t', str(temp_dir)])
     target_folder = get_target_folder(temp_dir)
     assert identical_folder_contents(project_dir, target_folder / 'config')
 
 
 @mark.parametrize('resolve_symlinks', (True, False))
 def test_nested_extends(project_dir, temp_dir, resolve_symlinks):
-    args = ['backup', '-t', temp_dir]
+    args = ['backup', '-t', str(temp_dir)]
     if resolve_symlinks:
         args.append('--resolve-symlinks')
 
-    assert result_okay(run(args))
+    assert result_okay(args)
     target_folder = get_target_folder(temp_dir)
     assert identical_folder_contents(project_dir, target_folder / 'config')
 
 
 @mark.parametrize('resolve_symlinks', (True, False))
 def test_missing_files(project_dir, temp_dir, resolve_symlinks, caplog):
-    args = ['backup', '-t', temp_dir]
+    args = ['backup', '-t', str(temp_dir)]
     if resolve_symlinks:
         args.append('--resolve-symlinks')
 
@@ -95,4 +95,4 @@ def test_missing_files(project_dir, temp_dir, resolve_symlinks, caplog):
 
     project_dir.add_file('gone')
     caplog.clear()
-    assert result_okay(run(args))
+    assert result_okay(args)

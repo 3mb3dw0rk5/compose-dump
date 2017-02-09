@@ -6,7 +6,7 @@ from tempfile import TemporaryDirectory
 from pytest import mark
 import yaml
 
-from tests.utils import count_dir_contents, get_target_folder, result_okay, run
+from tests.utils import count_dir_contents, get_target_folder, result_okay
 
 
 @mark.usefixtures('compose_down', 'project_dir')
@@ -15,11 +15,11 @@ def test_volumes(compression, temp_dir):
     assert call(['docker', 'volume', 'create', '--name=dontcare']) == 0
     assert call(['docker-compose', 'up', '-d']) == 0
 
-    args = ['backup', '-t', temp_dir]
+    args = ['backup', '-t', str(temp_dir)]
     if compression:
         args.extend(['--compression', compression])
 
-    assert result_okay(run(args))
+    assert result_okay(args)
 
     target_item = get_target_folder(temp_dir)
 
