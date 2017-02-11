@@ -1,8 +1,10 @@
-Backup
-======
+Backup command
+==============
 
-Unless a ``--target`` is given, a complete backup will be dumped as ``tar``-
-archive to ``stdout``.
+.. note:: info
+
+    If no argument is provided, a complete backup will be dumped as ``tar``-
+    archive to ``stdout``.
 
 Each backup includes a ``Manifest.yml`` with meta-data about the backup,
 including mappings from configured volumes to volume archives and the logging
@@ -33,8 +35,7 @@ Source
 
 Alias: ``-f``
 
-Selects the `compose file`_(s) that resemble(s) a project.
-This option can be provided multiple times.
+Selects one or more instances of a  `compose file` that resemble(s) a project.
 If omitted, it's looked for from the current working directory upwards.
 
 ``--project-dir``
@@ -104,7 +105,7 @@ following placeholders are available:
 - ``{host}``
 - ``{isodate}``
 - ``{name}``
-- ``{path_hash}`` (use this to discriminate projects with the same name at different locations)
+- ``{path_hash}`` (use this to discriminate projects with the same name in different locations)
 - ``{time}``
 
 Behaviour

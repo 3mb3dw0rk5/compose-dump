@@ -13,32 +13,39 @@ folder. It's intended to be a simple tool for usage within a broader
 backup-logic. The extent of a backup can be controlled by content scopes and
 services.
 
+Main features
+-------------
+
+- Backup Docker Compose projects.
+- Optionally include configuration with all its referenced files.
+- Optionally include volumes of specified services.
+- Store dumps in a directory, as archive on disk or as archive to the standard
+  output.
+
+
+See planned features below.
+
 Installation
 ------------
 
-There's yet no package on the Python Package Index. Installation can be
-achieved in two ways at the moment:
+With `pipsi`_ (recommended to avoid library version conflicts):
 
 .. code-block:: console
 
-    $ git clone -o upstream git@github.com:funkyfuture/compose-dump.git
+    $ pipsi install compose-dump
+
+Or with `pip`_:
+
+.. code-block:: console
+
+    $ pip install compose-dump
+
+To install an editable development instance:
+
+.. code-block:: console
+
     $ cd compose-dump
-
-    # use python3 if python points to python2
-    $ python setup.py install
-
-    # or to install an editable instance:
-    $ python setup.py develop
-
-Updating
---------
-
-.. code-block:: console
-
-    $ git pull upstream master
-
-    # if not installed as editable:
-    $ python setup.py install
+    $ pipsi install -e .  # or use `pip`
 
 Usage
 -----
@@ -140,12 +147,10 @@ TODO / Known issues / Caveats
 general
 ~~~~~~~
 
--  test against different versions of docker-compose
--  features list at the top of readme
--  make use of compose config hashes
--  support for tls options
--  maybe:
-  -  make use of mypy
+- test against different versions of docker-compose
+- make use of compose config hashes
+- docs: point to environment variables regarding tls config
+- make use of mypy
 
 backup
 ~~~~~~
@@ -155,15 +160,15 @@ is larger than the available memory. Thus you should avoid such scenarios on
 production systems. This does not apply for mounted volumes.  If you can't
 avoid such cases, please open an issue.
 
+- test volumes defined in extended services
+- filter volumes
+- only pause actually affected services
+- backup-configuration from a file in a project's folder
+- maybe:
 
--  test volumes defined in extended services
--  filter volumes
--  only pause actually affected services
--  maybe:
-  -  backup-configuration from a file
-  -  respect .dockerignore
-  -  .backupignore
-  -  read config from stdin
+  - respect .dockerignore
+  - .backupignore
+  - read config from stdin
 
 restore
 ~~~~~~~
@@ -174,3 +179,5 @@ restore
 
 .. _`Docker Compose`: https://docs.docker.com/compose/
 .. _`file system path protocol`: https://www.python.org/dev/peps/pep-0519/
+.. _`pip`: https://packaging.python.org/installing/#use-pip-for-installing
+.. _`pipsi`: https://github.com/mitsuhiko/pipsi

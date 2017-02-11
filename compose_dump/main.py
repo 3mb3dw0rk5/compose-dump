@@ -87,7 +87,7 @@ def add_backup_parser(subparsers):
                         help='Log debug messages.')
     parser.add_argument('--volumes', action='store_true', default=False,
                         help='Include container volumes.')
-    parser.add_argument('services', default=(), nargs='*', metavar='SERVICE...',
+    parser.add_argument('services', default=(), nargs='*', metavar='SERVICE',
                         help='Restrict backup of build contexts and volumes to these services.')
 
 
