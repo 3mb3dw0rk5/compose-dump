@@ -47,11 +47,13 @@ def directory_exists(path):
 def parse_cli_args(args):
     parser = ArgumentParser()
     parser.add_argument('--version', action='version', version=__version__)
-    parser.set_defaults(action=help)
     subparsers = parser.add_subparsers()
     add_backup_parser(subparsers)
     add_restore_parser(subparsers)
-    return parser.parse_args(args)
+    args = parser.parse_args(args)
+    if not hasattr(args, 'action'):
+        args.action = help
+    return args
 
 
 def add_backup_parser(subparsers):
