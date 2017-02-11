@@ -12,7 +12,7 @@ if sys.version_info < (3, 4):
 
 setup(
     name='compose-dump',
-    version='0.1-beta1',
+    version='0.1-beta2',
     description='Backup tool for Docker Compose projects',
     long_description=open('README.rst').read(),
     classifiers=[
