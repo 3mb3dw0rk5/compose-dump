@@ -138,7 +138,7 @@ def process_backup_options(options):
     options['compose_files'] = options['file']
     del options['file']
 
-    options['project_dir'] = Path(options['project_dir'])
+    options['project_dir'] = Path(options['project_dir']).resolve()
     directory_exists(options['project_dir'])
     options['project_name'] = (options['project_name'] or
                                os.getenv('COMPOSE_PROJECT_NAME') or
