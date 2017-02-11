@@ -28,7 +28,7 @@ def test_yet_another_blog(project_dir, temp_dir, target, compression, resolve_sy
         target_item = get_target_folder(temp_dir)
     else:
         return  # FIXME https://github.com/pytest-dev/pytest/issues/1407
-        out, err = capsys.readouterr()
+        out, err = capsys.readouterr()  # noqa: F821
         target_item = temp_dir / 'archive'
         with target_item.open('wb') as f:
             f.write(out)
