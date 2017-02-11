@@ -189,6 +189,7 @@ def main():
     try:
         args = parse_cli_args(sys.argv[1:])
         setup_loghandler(console_handler, getattr(args, 'verbose', False))
+        log.setLevel(console_handler.level)
         args.action(args)
     except SystemExit as e:
         exit_code = e.code
