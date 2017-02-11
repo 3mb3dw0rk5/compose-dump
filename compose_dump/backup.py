@@ -58,10 +58,10 @@ def create_dump(ctx):
         store_config(ctx)
 
     if 'mounted' in scopes or 'volumes' in scopes:
-        if ctx.options['no_pause']:
+        if not ctx.options['no_pause']:
             ctx.project.pause(service_names=ctx.options['services'])
         store_volumes(ctx)
-        if ctx.options['no_pause']:
+        if not ctx.options['no_pause']:
             ctx.project.unpause(service_names=ctx.options['services'])
 
     meta['finish_time'] = datetime.now().isoformat()
