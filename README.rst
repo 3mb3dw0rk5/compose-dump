@@ -126,6 +126,9 @@ The integration tests require a docker client on the test machine. To
 keep the temporary directories that contain integration tests' results,
 invoke ``pytest`` with the ``--keep-results`` option.
 
+Before opening a pull request, make sure you run tests against all supported
+dependencies with ``make test-all``.
+
 You are free to hate me for relying mainly on integration tests. But
 keep it to yourself, the world's already filled up with hatred. I
 suggest anyone with such sentiment uses this dark energy to implement

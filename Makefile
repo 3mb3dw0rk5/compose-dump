@@ -44,6 +44,9 @@ lint: ## check style with flake8
 test: ## run tests
 	pytest tests
 
+test-all: ## run tests against all supported versions
+	tox
+
 docs: ## generate Sphinx HTML documentation, including API docs
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
