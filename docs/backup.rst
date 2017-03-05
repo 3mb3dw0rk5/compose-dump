@@ -1,12 +1,12 @@
 Backup command
 ==============
 
-.. note:: info
+.. note::
 
     If no argument is provided, a complete backup will be dumped as ``tar``-
     archive to ``stdout``.
 
-Each backup includes a ``Manifest.yml`` with meta-data about the backup,
+Each backup includes a ``Manifest.yml`` with metadata about the backup,
 including mappings from configured volumes to volume archives and the logging
 output.
 

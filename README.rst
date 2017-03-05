@@ -147,7 +147,6 @@ TODO / Known issues / Caveats
 general
 ~~~~~~~
 
-- test against different versions of docker-compose
 - make use of compose config hashes
 - docs: point to environment variables regarding tls config
 - make use of mypy

@@ -5,8 +5,6 @@ from setuptools import setup, find_packages
 import sys
 
 
-install_requires = [x for x in open('requirements.txt').readlines() if x and not x.startswith('#')]
-
 if sys.version_info < (3, 4):
     raise AssertionError('Requires Python 3.4 or later.')
 
@@ -35,8 +33,8 @@ setup(
     author_email='funkyfuture@riseup.net',
     license='ISC',
     platforms=["any"],
-    install_requires=install_requires,
-    tests_require=[],  # TODO
+    install_requires=['docker-compose>=1.7,<1.12'],
+    tests_require=['tox'],
     packages=find_packages(exclude=['tests.*', 'tests']),
     include_package_data=True,
     entry_points="""
