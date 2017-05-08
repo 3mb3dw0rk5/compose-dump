@@ -10,7 +10,7 @@ if sys.version_info < (3, 4):
 
 setup(
     name='compose-dump',
-    version='0.1-beta2',
+    version='0.1-beta3',
     description='Backup tool for Docker Compose projects',
     long_description=open('README.rst').read(),
     classifiers=[
@@ -33,7 +33,7 @@ setup(
     author_email='funkyfuture@riseup.net',
     license='ISC',
     platforms=["any"],
-    install_requires=['docker-compose>=1.7,<1.12'],
+    install_requires=['docker-compose>=1.7,<1.14'],
     tests_require=['tox'],
     packages=find_packages(exclude=['tests.*', 'tests']),
     include_package_data=True,

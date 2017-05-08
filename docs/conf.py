@@ -58,7 +58,7 @@ author = 'Frank Sachsenheim'
 # built documents.
 #
 # The full version, including alpha/beta/rc tags.
-release = '0.1-beta2'
+release = '0.1-beta3'
 # The short X.Y version.
 version = release.split('-')[0]
 

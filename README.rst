@@ -1,7 +1,7 @@
 Overview
 ========
 
-.. warning::
+::
 
     This piece of code is tested with only a small number of use-cases yet.
     You are invited to contribute.
@@ -16,7 +16,7 @@ services.
 Main features
 -------------
 
-- Backup Docker Compose projects.
+- Archives Docker Compose projects.
 - Optionally include configuration with all its referenced files.
 - Optionally include volumes of specified services.
 - Store dumps in a directory, as archive on disk or as archive to the standard
@@ -28,21 +28,15 @@ See planned features below.
 Installation
 ------------
 
-With `pipsi`_ (recommended to avoid library version conflicts):
-
-.. code-block:: console
+With `pipsi`_ (recommended to avoid library version conflicts)::
 
     $ pipsi install compose-dump
 
-Or with `pip`_:
-
-.. code-block:: console
+Or with `pip`_::
 
     $ pip install compose-dump
 
-To install an editable development instance:
-
-.. code-block:: console
+To install an editable development instance::
 
     $ cd compose-dump
     $ pipsi install -e .  # or use `pip`
@@ -53,35 +47,25 @@ Usage
 Examples
 ~~~~~~~~
 
-Fully dump a compose-project from ``project_path`` to ``/var/backups/compose``:
-
-.. code-block:: console
+Fully dump a compose-project from ``project_path`` to ``/var/backups/compose``::
 
     $ cd project_path
     $ compose-dump backup -t /var/backups/compose
 
-Write a gzip-compressed archive to a remote host via ssh:
-
-.. code-block:: console
+Write a gzip-compressed archive to a remote host via ssh::
 
     $ cd project_path
     $ compose-dump backup -x gz | ssh user@host "cat - > ~/backup.tar.gz"
 
-Only dump configuration and data from container-volumes of the service ``web``:
-
-.. code-block:: console
+Only dump configuration and data from container-volumes of the service ``web``::
 
     $ compose-dump backup --config --volumes web
 
-Backup all projects with a ``docker-compose.yml`` to ``/var/backups/compose``:
-
-.. code-block:: console
+Backup all projects with a ``docker-compose.yml`` to ``/var/backups/compose``::
 
     $ find . -name "docker-compose.yml" -type f -execdir compose-dump backup -t /var/backups/compose \;
 
-Command line reference:
-
-.. code-block:: console
+Command line reference::
 
     $ compose-dump
     $ compose-dump backup --help
@@ -159,7 +143,7 @@ backup
 
 You may run into issues if a volume's archive delivered by the Docker daemon
 is larger than the available memory. Thus you should avoid such scenarios on
-production systems. This does not apply for mounted volumes.  If you can't
+production systems. This does not apply for mounted volumes. If you can't
 avoid such cases, please open an issue.
 
 - test volumes defined in extended services
