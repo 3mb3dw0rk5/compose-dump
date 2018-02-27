@@ -1,7 +1,9 @@
-sudo: false
+sudo: required
 language: python
 cache: pip
 python: 3.6
+services:
+  - docker
 env:
   - TOX_ENV=lint
   - TOX_ENV=py36-compose7
