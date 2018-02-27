@@ -16,7 +16,7 @@ except ImportError:
     from distutils.version import LooseVersion as ComposeVersion
 import yaml
 
-from compose_dump import __version__
+from compose_dump import VERSION
 from compose_dump.utils import get_container_for_service, get_container_with_project_volume, hash_string, locates_in, \
     setup_loghandler, PathSet
 from compose_dump.storage import init_storage
@@ -46,7 +46,7 @@ def create_dump(ctx):
     meta['host'] = gethostname()
     meta['uid'] = os.getuid()
     meta['gid'] = os.getgid()
-    meta['version'] = __version__
+    meta['version'] = VERSION
 
     init_storage(ctx)
 

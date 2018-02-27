@@ -1,1 +1,3 @@
-__version__ = '0.1-beta3'
+import pkg_resources
+
+VERSION = pkg_resources.get_distribution('compose-dump').version

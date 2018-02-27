@@ -8,7 +8,7 @@ from types import SimpleNamespace
 
 from compose import config as compose_config
 
-from compose_dump import __version__
+from compose_dump import VERSION
 from compose_dump.backup import create_dump
 from compose_dump.utils import setup_loghandler
 
@@ -46,7 +46,7 @@ def directory_exists(path):
 
 def parse_cli_args(args):
     parser = ArgumentParser()
-    parser.add_argument('--version', action='version', version=__version__)
+    parser.add_argument('--version', action='version', version=VERSION)
     subparsers = parser.add_subparsers()
     add_backup_parser(subparsers)
     add_restore_parser(subparsers)

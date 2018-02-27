@@ -4,13 +4,16 @@
 from setuptools import setup, find_packages
 import sys
 
+VERSION = '0.1-beta4'
+
 
 if sys.version_info < (3, 6):
     raise AssertionError('Requires Python 3.6 or later.')
 
+
 setup(
     name='compose-dump',
-    version='0.1-beta3',
+    version=VERSION,
     description='Backup tool for Docker Compose projects',
     long_description=open('README.rst').read(),
     classifiers=[

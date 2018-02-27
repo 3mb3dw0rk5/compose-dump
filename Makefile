@@ -1,7 +1,7 @@
 .PHONY: all
 .DEFAULT_GOAL := test
 
-VERSION = $(shell grep __version__ compose_dump/__init__.py | cut -f3 -d" " | tr -d "'")
+VERSION = $(shell grep "VERSION =" setup.py | cut -f3 -d" " | tr -d "'")
 COMMIT = $(shell git rev-parse HEAD)
 
 define PRINT_HELP_PYSCRIPT
