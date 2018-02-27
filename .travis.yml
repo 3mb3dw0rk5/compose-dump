@@ -1,0 +1,22 @@
+sudo: false
+language: python
+cache: pip
+python: 3.6
+env:
+  - TOX_ENV=lint
+  - TOX_ENV=py36-compose7
+  - TOX_ENV=py36-compose8
+  - TOX_ENV=py36-compose9
+  - TOX_ENV=py36-compose10
+  - TOX_ENV=py36-compose11
+  - TOX_ENV=py36-compose12
+  - TOX_ENV=py36-compose13
+  - TOX_ENV=py36-compose14
+  - TOX_ENV=py36-compose15
+  - TOX_ENV=py36-compose16
+  - TOX_ENV=py36-compose17
+  - TOX_ENV=py36-compose18
+  - TOX_ENV=py36-compose19
+  - TOX_ENV=compose-master
+install: travis_retry pip install tox
+script: tox -e $TOX_ENV
