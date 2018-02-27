@@ -10,6 +10,10 @@ import sys
 from compose.cli.command import get_config_path_from_options, get_project
 from compose.config.config import ConfigFile
 from compose.service import NoSuchImageError
+try:
+    from compose.version import ComposeVersion
+except ImportError:
+    from distutils.version import LooseVersion as ComposeVersion
 import yaml
 
 from compose_dump import __version__
@@ -123,12 +127,15 @@ def store_config(ctx):
 def store_config_file(ctx, compose_file, considered_files):
     filepath = Path(compose_file.filename)
     fileparent = filepath.parent
+    compose_file_version = compose_file.version
+    if not isinstance(compose_file_version, ComposeVersion):  # up to Docker-Compose 1.14
+        compose_file_version = ComposeVersion(compose_file_version)
 
     put_config_file(ctx, filepath, considered_files)
 
-    if compose_file.version == '1':
+    if compose_file_version < ComposeVersion('2'):
         services = compose_file.config
-    elif compose_file.version.startswith('2.'):
+    elif compose_file_version < ComposeVersion('4'):
         services = compose_file.config['services']
     else:
         log.error('Unsupported config version: %s' % compose_file.version)
