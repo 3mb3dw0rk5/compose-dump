@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 import sys
 
 
-if sys.version_info < (3, 4):
-    raise AssertionError('Requires Python 3.4 or later.')
+if sys.version_info < (3, 6):
+    raise AssertionError('Requires Python 3.6 or later.')
 
 setup(
     name='compose-dump',
@@ -33,7 +33,7 @@ setup(
     author_email='funkyfuture@riseup.net',
     license='ISC',
     platforms=["any"],
-    install_requires=['docker-compose>=1.7,<1.14'],
+    install_requires=['docker-compose>=1.7,<1.20'],
     tests_require=['tox'],
     packages=find_packages(exclude=['tests.*', 'tests']),
     include_package_data=True,
