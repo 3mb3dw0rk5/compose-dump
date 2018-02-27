@@ -48,6 +48,7 @@ def check_volumes_result(target_folder):
     assert count_dir_contents(target_folder / 'volumes' / 'project') == 1
     assert len(volumes['services']) == 1
     assert len(volumes['services']['foo']) == 2
+    assert '/volume' in volumes['services']['foo'], volumes['services']['foo']
     volume = volumes['services']['foo']['/volume']
     archive = target_folder / 'volumes' / 'services' / volume
     assert archive.is_file()
