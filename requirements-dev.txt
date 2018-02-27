@@ -1,8 +1,6 @@
 flake8
-pytest
+pytest>=3.4
 pytest-mock
-# TODO change when a release incl. caplog.clear() is released
-git+git://github.com/eisensheng/pytest-catchlog.git#egg=pytest-catchelog
 Sphinx
 sphinx_rtd_theme
 tox
