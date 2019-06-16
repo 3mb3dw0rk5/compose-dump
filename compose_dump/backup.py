@@ -230,9 +230,12 @@ def store_project_volumes(ctx):
             if container is None:
                 log.critical('Found no container that uses project volume %s' % name)
                 continue
-            response, stat = ctx.project.client.get_archive(container.id, path)
+            bits, stat = ctx.project.client.get_archive(container.id, path)
             archive_name = name + '.tar'
-            ctx.storage.write_file(response.stream, archive_name, namespace='volumes/project')
+            if hasattr(bits, 'stream'):
+                # older docker-apis (< 3.0.0) do not return a data generator
+                bits = bits.stream
+            ctx.storage.write_file(bits, archive_name, namespace='volumes/project')
             ctx.manifest['volumes']['project'][name] = archive_name
 
 
@@ -273,8 +276,11 @@ def store_services_volumes(ctx, mounted_paths):
                 continue
             for path in internal_volumes:
                 archive_name = hash_string(service.name.upper() + path) + '.tar'
-                response, stat = ctx.project.client.get_archive(container.id, path)
-                ctx.storage.write_file(response.stream, archive_name, namespace='volumes/services')
+                bits, stat = ctx.project.client.get_archive(container.id, path)
+                if hasattr(bits, 'stream'):
+                    # older docker-apis (< 3.0.0) do not return a data generator
+                    bits = bits.stream
+                ctx.storage.write_file(bits, archive_name, namespace='volumes/services')
                 index[path] = archive_name
 
 

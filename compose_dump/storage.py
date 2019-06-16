@@ -7,6 +7,7 @@ from pathlib import Path
 import shutil
 import sys
 import tarfile
+import types
 from time import time
 
 from compose_dump.utils import hash_string
@@ -124,6 +125,13 @@ class ArchiveStorage(StorageAdapterBase):
                 size += len(chunk)
                 buffer.write(chunk)
             buffer.seek(0)
+        elif isinstance(data, types.GeneratorType):
+            size = 0
+            buffer = io.BytesIO()
+            for chunk in data:
+                size += len(chunk)
+                buffer.write(chunk)
+            buffer.seek(0)
 
         tarinfo = tarfile.TarInfo(str(dst))
         tarinfo.size = size
@@ -170,6 +178,10 @@ class FolderStorage(StorageAdapterBase):
         elif callable(data):
             with dst.open('wb') as f:
                 for chunk in data():
+                    f.write(chunk)
+        elif isinstance(data, types.GeneratorType):
+            with dst.open('wb') as f:
+                for chunk in data:
                     f.write(chunk)
 
 

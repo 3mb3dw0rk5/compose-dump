@@ -4,11 +4,11 @@
 from setuptools import setup, find_packages
 import sys
 
-VERSION = '0.1-beta4'
+VERSION = '0.1-beta5'
 
 
-if sys.version_info < (3, 6):
-    raise AssertionError('Requires Python 3.6 or later.')
+if sys.version_info < (3, 5):
+    raise AssertionError('Requires Python 3.5 or later.')
 
 
 setup(
@@ -36,7 +36,7 @@ setup(
     author_email='funkyfuture@riseup.net',
     license='ISC',
     platforms=["any"],
-    install_requires=['docker-compose>=1.7,<1.20'],
+    install_requires=['docker-compose>=1.7'],
     tests_require=['tox'],
     packages=find_packages(exclude=['tests.*', 'tests']),
     include_package_data=True,
