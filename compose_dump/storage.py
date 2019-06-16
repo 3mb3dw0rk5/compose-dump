@@ -118,7 +118,7 @@ class ArchiveStorage(StorageAdapterBase):
         if isinstance(data, bytes):
             size = len(data)
             buffer = io.BytesIO(data)
-        elif callable(data):
+        elif callable(data):  # TODO: obsolete with docker-compose>1.19.0 (e.g. docker-py>=3.0.0)
             size = 0
             buffer = io.BytesIO()
             for chunk in data():
@@ -175,7 +175,7 @@ class FolderStorage(StorageAdapterBase):
         elif isinstance(data, bytes):
             with dst.open('wb') as f:
                 f.write(data)
-        elif callable(data):
+        elif callable(data):  # TODO: obsolete with docker-compose>1.19.0 (e.g. docker-py>=3.0.0)
             with dst.open('wb') as f:
                 for chunk in data():
                     f.write(chunk)

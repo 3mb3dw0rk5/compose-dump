@@ -1,5 +1,5 @@
-from collections import OrderedDict, Sequence
-from collections.abc import Mapping
+from collections import OrderedDict
+from collections.abc import Mapping, Sequence
 from datetime import datetime
 from io import StringIO
 import logging
@@ -232,8 +232,7 @@ def store_project_volumes(ctx):
                 continue
             bits, stat = ctx.project.client.get_archive(container.id, path)
             archive_name = name + '.tar'
-            if hasattr(bits, 'stream'):
-                # older docker-apis (< 3.0.0) do not return a data generator
+            if hasattr(bits, 'stream'):  # TODO: obsolete with docker-compose>1.19.0 (e.g. docker-py>=3.0.0)
                 bits = bits.stream
             ctx.storage.write_file(bits, archive_name, namespace='volumes/project')
             ctx.manifest['volumes']['project'][name] = archive_name
@@ -277,8 +276,7 @@ def store_services_volumes(ctx, mounted_paths):
             for path in internal_volumes:
                 archive_name = hash_string(service.name.upper() + path) + '.tar'
                 bits, stat = ctx.project.client.get_archive(container.id, path)
-                if hasattr(bits, 'stream'):
-                    # older docker-apis (< 3.0.0) do not return a data generator
+                if hasattr(bits, 'stream'):  # TODO: obsolete with docker-compose>1.19.0 (e.g. docker-py>=3.0.0)
                     bits = bits.stream
                 ctx.storage.write_file(bits, archive_name, namespace='volumes/services')
                 index[path] = archive_name
