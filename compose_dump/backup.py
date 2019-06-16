@@ -1,4 +1,5 @@
-from collections import Mapping, OrderedDict, Sequence
+from collections import OrderedDict, Sequence
+from collections.abc import Mapping
 from datetime import datetime
 from io import StringIO
 import logging
