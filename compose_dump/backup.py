@@ -182,6 +182,8 @@ def put_config_file(ctx, filepath, considered_files):
 
 def store_build_contexts(ctx):
     project_dir = ctx.options['project_dir']
+    # create set of paths to copy to avoid duplicated copies
+    config_dirs = set()
 
     for service in ctx.project.services:
         if service.name not in ctx.options['services']:
@@ -193,7 +195,10 @@ def store_build_contexts(ctx):
         context = build_options.get('context')
         if context:
             dst = Path(context).relative_to(project_dir)
-            ctx.storage.put_folder(project_dir / context, dst, namespace='config')
+            config_dirs.add((project_dir / context, dst))
+
+    for config_dir in config_dirs:
+        ctx.storage.put_folder(config_dir[0], config_dir[1], namespace='config')
 
 
 ####
